@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>汉字接龙</title>
+	<style type="text/css">
+		body {
+			background-color: black;
+			color: white;
+		}
+		.mojiShow {
+			position: absolute;
+			left: 10px;
+			top: 10px;
+			width: auto;
+			height: 90%;
+			line-height: 20px;
+			grid-column: 20px;
+		}
+		.moji {
+			font-size: 14px;
+		}
+		.errorMoji {
+			color: red;
+			font-weight: 100;
+		}
+		.mojiInput {
+			position: absolute;
+			left: 10px;
+			top: 10px;
+			width: 40px;
+			height: 20px;
+			line-height: 20px;
+		}
+		.mojiInputBox {
+			width: 20px;
+			height: 20px;
+		}
+	</style>
+	<script type="text/javascript">
+		var mojis = [];
+		row = 0;
+		function keyDown(event){
+			var mojiShow = document.getElementById('mojiShow');
+			var mojiInputBox = document.getElementById('mojiInputBox');
+			var mojiInput = document.getElementById('mojiInput');
+			if (event.key == 'Enter') {
+				if (mojiInputBox.value == '') {
+					return;
+				}
+				var span = document.createElement('span');
+				span.innerHTML = mojiInputBox.value;
+				if (mojis.includes(mojiInputBox.value)) {
+					span.classList.add('moji', 'errorMoji');
+				} else {
+					span.classList.add('moji');
+					mojis.push(mojiInputBox.value);
+				}
+				mojiShow.append(span);
+				var left = parseInt(window.getComputedStyle(mojiInput).left.slice(0, -2));
+				if (left > 500) {
+					row++;
+					left = -6;
+					var top = parseInt(window.getComputedStyle(mojiInput).top.slice(0, -2));
+					mojiInput.style.top = (top + 22) + 'px';
+					mojiShow.innerHTML+= '<br>';
+				}
+				mojiInput.style.left = (left + 14) + 'px';
+				mojiInputBox.value = '';
+			} else if (event.key == 'Delete') {
+				mojiShow.children[mojiShow.childElementCount - 1].remove();
+				var left = parseInt(window.getComputedStyle(mojiInput).left.slice(0, -2));
+				mojiInput.style.left = (left - 14) + 'px';
+				mojiInputBox.value = '';
+			}
+		}
+	</script>
+</head>
+<body>
+	<div id="mojiShow" class="mojiShow">
+	</div>
+	<div id="mojiInput" class="mojiInput">
+		<input type="text" name="mojiInputBox" id="mojiInputBox" class="mojiInputBox" maxlength="1" onkeydown="keyDown(event)">
+	</div>
+</body>
+</html>
