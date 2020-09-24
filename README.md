@@ -11,4 +11,6 @@
     删除最后一个文字
 * 表示
   虽然没有什么规则，但是如果输入的文字重复了，那么将会变为红色<br>
-  超过500px将会换行
+  超过500px将会换行<br>
+
+![](https://github.com/songym6088/ReadmeImage/blob/master/%E6%B1%89%E5%AD%97%E6%8E%A5%E9%BE%99.png)
