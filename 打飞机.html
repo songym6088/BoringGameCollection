@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>打飞机</title>
+	<style type="text/css">
+		body {
+			background-color: black;
+			color: white
+		}
+		.map {
+			border: solid 1px;
+			width: 300px;
+			height: 300px;
+			position: absolute;
+			top: 20px;
+			left: 20px;
+		}
+		tr:nth-child(even), tr:nth-child(odd) {
+		  background: grey;
+		}
+		.setumei {
+			position: absolute;
+			top: 20px;
+			left: 330px;
+			width: 600px;
+			height: 300px;
+		}
+		.scorediv {
+			position: absolute;
+			top: 330px;
+			left: 20px;
+		}
+	</style>
+	<script type="text/javascript">
+		var plant1 = [];
+		var plant2 = [];
+		var plant3 = [];
+		var times = 0;
+		window.onload = function(){
+			var table = document.getElementById('plantmap');
+			if (table != null) {
+			    for (var i = 0; i < table.rows.length; i++) {
+			        for (var j = 0; j < table.rows[i].cells.length; j++)
+			        table.rows[i].cells[j].onclick = function () {
+			            checkPlant(this);
+			        };
+			    }
+			}
+			makePlant1();
+		}
+		var count = 0;
+		function makePlant1() {
+			var direction = Math.floor(Math.random()*4);
+			switch (direction){
+				case 0:
+					//↑
+					plant1headx = Math.floor(Math.random()*(5-0+1)+0);
+					plant1heady = Math.floor(Math.random()*(7-2+1)+2);
+					plant1.push(plant1headx + '' + plant1heady);
+					plant1.push((plant1headx+1) + '' + plant1heady);
+					plant1.push((plant1headx+2) + '' + plant1heady);
+					plant1.push((plant1headx+3) + '' + plant1heady);
+					plant1.push((plant1headx+4) + '' + plant1heady);
+					plant1.push((plant1headx+1) + '' + (plant1heady-2));
+					plant1.push((plant1headx+1) + '' + (plant1heady-1));
+					plant1.push((plant1headx+1) + '' + (plant1heady+1));
+					plant1.push((plant1headx+1) + '' + (plant1heady+2));
+					plant1.push((plant1headx+4) + '' + (plant1heady-1));
+					plant1.push((plant1headx+4) + '' + (plant1heady+1));
+					break;
+				case 1:
+					//←
+					plant1heady = Math.floor(Math.random()*(5-0+1)+0);
+					plant1headx = Math.floor(Math.random()*(7-2+1)+2);
+					plant1.push(plant1headx + '' + plant1heady);
+					plant1.push(plant1headx + '' + (plant1heady+1));
+					plant1.push(plant1headx + '' + (plant1heady+2));
+					plant1.push(plant1headx + '' + (plant1heady+3));
+					plant1.push(plant1headx + '' + (plant1heady+4));
+					plant1.push((plant1headx-2) + '' + (plant1heady+1));
+					plant1.push((plant1headx-1) + '' + (plant1heady+1));
+					plant1.push((plant1headx+1) + '' + (plant1heady+1));
+					plant1.push((plant1headx+2) + '' + (plant1heady+1));
+					plant1.push((plant1headx-1) + '' + (plant1heady+4));
+					plant1.push((plant1headx+1) + '' + (plant1heady+4));
+					break;
+				case 2:
+					//↓
+					plant1headx = Math.floor(Math.random()*(9-4+1)+4);
+					plant1heady = Math.floor(Math.random()*(7-2+1)+2);
+					plant1.push(plant1headx + '' + plant1heady);
+					plant1.push((plant1headx-1) + '' + plant1heady);
+					plant1.push((plant1headx-2) + '' + plant1heady);
+					plant1.push((plant1headx-3) + '' + plant1heady);
+					plant1.push((plant1headx-4) + '' + plant1heady);
+					plant1.push((plant1headx-1) + '' + (plant1heady-2));
+					plant1.push((plant1headx-1) + '' + (plant1heady-1));
+					plant1.push((plant1headx-1) + '' + (plant1heady+1));
+					plant1.push((plant1headx-1) + '' + (plant1heady+2));
+					plant1.push((plant1headx-4) + '' + (plant1heady-1));
+					plant1.push((plant1headx-4) + '' + (plant1heady+1));
+					break;
+				case 3:
+					//→
+					plant1heady = Math.floor(Math.random()*(9-4+1)+4);
+					plant1headx = Math.floor(Math.random()*(7-2+1)+2);
+					plant1.push(plant1headx + '' + plant1heady);
+					plant1.push(plant1headx + '' + (plant1heady-1));
+					plant1.push(plant1headx + '' + (plant1heady-2));
+					plant1.push(plant1headx + '' + (plant1heady-3));
+					plant1.push(plant1headx + '' + (plant1heady-4));
+					plant1.push((plant1headx-2) + '' + (plant1heady-1));
+					plant1.push((plant1headx-1) + '' + (plant1heady-1));
+					plant1.push((plant1headx+1) + '' + (plant1heady-1));
+					plant1.push((plant1headx+2) + '' + (plant1heady-1));
+					plant1.push((plant1headx-1) + '' + (plant1heady-4));
+					plant1.push((plant1headx+1) + '' + (plant1heady-4));
+					break;
+				default:
+					break;
+
+			}
+			makePlant2();
+		}
+		function makePlant2() {
+			try {
+				var direction = Math.floor(Math.random()*4);
+				switch (direction){
+					case 0:
+						//↑
+						plant2headx = Math.floor(Math.random()*(5-0+1)+0);
+						plant2heady = Math.floor(Math.random()*(7-2+1)+2);
+						plant2.push(plant2headx + '' + plant2heady);
+						plant2.push((plant2headx+1) + '' + plant2heady);
+						plant2.push((plant2headx+2) + '' + plant2heady);
+						plant2.push((plant2headx+3) + '' + plant2heady);
+						plant2.push((plant2headx+4) + '' + plant2heady);
+						plant2.push((plant2headx+1) + '' + (plant2heady-2));
+						plant2.push((plant2headx+1) + '' + (plant2heady-1));
+						plant2.push((plant2headx+1) + '' + (plant2heady+1));
+						plant2.push((plant2headx+1) + '' + (plant2heady+2));
+						plant2.push((plant2headx+4) + '' + (plant2heady-1));
+						plant2.push((plant2headx+4) + '' + (plant2heady+1));
+						break;
+					case 1:
+						//↑
+						plant2headx = Math.floor(Math.random()*(5-0+1)+0);
+						plant2heady = Math.floor(Math.random()*(7-2+1)+2);
+						plant2.push(plant2headx + '' + plant2heady);
+						plant2.push((plant2headx+1) + '' + plant2heady);
+						plant2.push((plant2headx+2) + '' + plant2heady);
+						plant2.push((plant2headx+3) + '' + plant2heady);
+						plant2.push((plant2headx+4) + '' + plant2heady);
+						plant2.push((plant2headx+1) + '' + (plant2heady-2));
+						plant2.push((plant2headx+1) + '' + (plant2heady-1));
+						plant2.push((plant2headx+1) + '' + (plant2heady+1));
+						plant2.push((plant2headx+1) + '' + (plant2heady+2));
+						plant2.push((plant2headx+4) + '' + (plant2heady-1));
+						plant2.push((plant2headx+4) + '' + (plant2heady+1));
+						break;
+					case 2:
+						//↑
+						plant2headx = Math.floor(Math.random()*(5-0+1)+0);
+						plant2heady = Math.floor(Math.random()*(7-2+1)+2);
+						plant2.push(plant2headx + '' + plant2heady);
+						plant2.push((plant2headx+1) + '' + plant2heady);
+						plant2.push((plant2headx+2) + '' + plant2heady);
+						plant2.push((plant2headx+3) + '' + plant2heady);
+						plant2.push((plant2headx+4) + '' + plant2heady);
+						plant2.push((plant2headx+1) + '' + (plant2heady-2));
+						plant2.push((plant2headx+1) + '' + (plant2heady-1));
+						plant2.push((plant2headx+1) + '' + (plant2heady+1));
+						plant2.push((plant2headx+1) + '' + (plant2heady+2));
+						plant2.push((plant2headx+4) + '' + (plant2heady-1));
+						plant2.push((plant2headx+4) + '' + (plant2heady+1));
+						break;
+					case 3:
+						//↑
+						plant2headx = Math.floor(Math.random()*(5-0+1)+0);
+						plant2heady = Math.floor(Math.random()*(7-2+1)+2);
+						plant2.push(plant2headx + '' + plant2heady);
+						plant2.push((plant2headx+1) + '' + plant2heady);
+						plant2.push((plant2headx+2) + '' + plant2heady);
+						plant2.push((plant2headx+3) + '' + plant2heady);
+						plant2.push((plant2headx+4) + '' + plant2heady);
+						plant2.push((plant2headx+1) + '' + (plant2heady-2));
+						plant2.push((plant2headx+1) + '' + (plant2heady-1));
+						plant2.push((plant2headx+1) + '' + (plant2heady+1));
+						plant2.push((plant2headx+1) + '' + (plant2heady+2));
+						plant2.push((plant2headx+4) + '' + (plant2heady-1));
+						plant2.push((plant2headx+4) + '' + (plant2heady+1));
+						break;
+					default:
+						break;
+				}
+				for (var i = 0; i < plant2.length; i++) {
+					if (plant1.includes(plant2[i])) {
+						plant2 = [];
+						count++;
+						if (count > 100) {
+							count = 0;
+							makePlant1();
+						}
+						makePlant2();
+					}
+					count = 0;
+					makePlant3();
+				}
+			} catch(err) {
+				plant1 = [];
+				plant2 = [];
+				plant3 = [];
+				makePlant1();
+			}
+		}
+		function makePlant3() {
+			try {
+				var direction = Math.floor(Math.random()*4);
+				switch (direction){
+					case 0:
+						//↑
+						plant3headx = Math.floor(Math.random()*(5-0+1)+0);
+						plant3heady = Math.floor(Math.random()*(7-2+1)+2);
+						plant3.push(plant3headx + '' + plant3heady);
+						plant3.push((plant3headx+1) + '' + plant3heady);
+						plant3.push((plant3headx+2) + '' + plant3heady);
+						plant3.push((plant3headx+3) + '' + plant3heady);
+						plant3.push((plant3headx+4) + '' + plant3heady);
+						plant3.push((plant3headx+1) + '' + (plant3heady-2));
+						plant3.push((plant3headx+1) + '' + (plant3heady-1));
+						plant3.push((plant3headx+1) + '' + (plant3heady+1));
+						plant3.push((plant3headx+1) + '' + (plant3heady+2));
+						plant3.push((plant3headx+4) + '' + (plant3heady-1));
+						plant3.push((plant3headx+4) + '' + (plant3heady+1));
+						break;
+					case 1:
+						//↑
+						plant3headx = Math.floor(Math.random()*(5-0+1)+0);
+						plant3heady = Math.floor(Math.random()*(7-2+1)+2);
+						plant3.push(plant3headx + '' + plant3heady);
+						plant3.push((plant3headx+1) + '' + plant3heady);
+						plant3.push((plant3headx+2) + '' + plant3heady);
+						plant3.push((plant3headx+3) + '' + plant3heady);
+						plant3.push((plant3headx+4) + '' + plant3heady);
+						plant3.push((plant3headx+1) + '' + (plant3heady-2));
+						plant3.push((plant3headx+1) + '' + (plant3heady-1));
+						plant3.push((plant3headx+1) + '' + (plant3heady+1));
+						plant3.push((plant3headx+1) + '' + (plant3heady+2));
+						plant3.push((plant3headx+4) + '' + (plant3heady-1));
+						plant3.push((plant3headx+4) + '' + (plant3heady+1));
+						break;
+					case 2:
+						//↑
+						plant3headx = Math.floor(Math.random()*(5-0+1)+0);
+						plant3heady = Math.floor(Math.random()*(7-2+1)+2);
+						plant3.push(plant3headx + '' + plant3heady);
+						plant3.push((plant3headx+1) + '' + plant3heady);
+						plant3.push((plant3headx+2) + '' + plant3heady);
+						plant3.push((plant3headx+3) + '' + plant3heady);
+						plant3.push((plant3headx+4) + '' + plant3heady);
+						plant3.push((plant3headx+1) + '' + (plant3heady-2));
+						plant3.push((plant3headx+1) + '' + (plant3heady-1));
+						plant3.push((plant3headx+1) + '' + (plant3heady+1));
+						plant3.push((plant3headx+1) + '' + (plant3heady+2));
+						plant3.push((plant3headx+4) + '' + (plant3heady-1));
+						plant3.push((plant3headx+4) + '' + (plant3heady+1));
+						break;
+					case 3:
+						//↑
+						plant3headx = Math.floor(Math.random()*(5-0+1)+0);
+						plant3heady = Math.floor(Math.random()*(7-2+1)+2);
+						plant3.push(plant3headx + '' + plant3heady);
+						plant3.push((plant3headx+1) + '' + plant3heady);
+						plant3.push((plant3headx+2) + '' + plant3heady);
+						plant3.push((plant3headx+3) + '' + plant3heady);
+						plant3.push((plant3headx+4) + '' + plant3heady);
+						plant3.push((plant3headx+1) + '' + (plant3heady-2));
+						plant3.push((plant3headx+1) + '' + (plant3heady-1));
+						plant3.push((plant3headx+1) + '' + (plant3heady+1));
+						plant3.push((plant3headx+1) + '' + (plant3heady+2));
+						plant3.push((plant3headx+4) + '' + (plant3heady-1));
+						plant3.push((plant3headx+4) + '' + (plant3heady+1));
+						break;
+					default:
+						break;
+
+				}
+				for (var i = 0; i < plant3.length; i++) {
+					if (plant2.includes(plant3[i]) || plant1.includes(plant3[i])) {
+						plant3 = [];
+						count++;
+						if (count > 100) {
+							count = 0;
+							makePlant2();
+						}
+						count = 0;
+						makePlant3();
+					}
+				}
+			} catch (err) {
+				plant1 = [];
+				plant2 = [];
+				plant3 = [];
+				makePlant1();
+			}
+		}
+		var downplantcount = 0;
+		function checkPlant(cell){
+			if (cell.style.backgroundColor != '') {
+				return;
+			}
+
+			times++;
+			var score = document.getElementById('score');
+			score.innerHTML = times;
+
+			var point = cell.id;
+			if (plant1.includes(point) || plant2.includes(point) || plant3.includes(point)) {
+				// bingo
+				if (plant1[0] == point || plant2[0] == point || plant3[0] == point) {
+					// head
+					cell.style.backgroundColor = 'red';
+					downplantcount++;
+					if (downplantcount == 3) {
+						gameover();
+					}
+				} else {
+					// body
+					cell.style.backgroundColor = 'yellow';
+				}
+			} else {
+				// sky
+				cell.style.backgroundColor = 'white';
+			}
+		}
+		function gameover(){
+			var table = document.getElementById('plantmap');
+			if (table != null) {
+			    for (var i = 0; i < table.rows.length; i++) {
+			        for (var j = 0; j < table.rows[i].cells.length; j++){
+			        	if (table.rows[i].cells[j].style.backgroundColor == '') {
+			        		var point = table.rows[i].cells[j].id;
+							if (plant1.includes(point) || plant2.includes(point) || plant3.includes(point)) {
+								table.rows[i].cells[j].style.backgroundColor = 'yellow';
+							} else {
+								table.rows[i].cells[j].style.backgroundColor = 'white';
+							}
+			        	}
+			        }
+			    }
+			}
+		}
+	</script>
+</head>
+<body>
+	<table id="plantmap" class="map">
+		<tr><td id="00"></td><td id="01"></td><td id="02"></td><td id="03"></td><td id="04"></td><td id="05"></td><td id="06"></td><td id="07"></td><td id="08"></td><td id="09"></td></tr>
+		<tr><td id="10"></td><td id="11"></td><td id="12"></td><td id="13"></td><td id="14"></td><td id="15"></td><td id="16"></td><td id="17"></td><td id="18"></td><td id="19"></td></tr>
+		<tr><td id="20"></td><td id="21"></td><td id="22"></td><td id="23"></td><td id="24"></td><td id="25"></td><td id="26"></td><td id="27"></td><td id="28"></td><td id="29"></td></tr>
+		<tr><td id="30"></td><td id="31"></td><td id="32"></td><td id="33"></td><td id="34"></td><td id="35"></td><td id="36"></td><td id="37"></td><td id="38"></td><td id="39"></td></tr>
+		<tr><td id="40"></td><td id="41"></td><td id="42"></td><td id="43"></td><td id="44"></td><td id="45"></td><td id="46"></td><td id="47"></td><td id="48"></td><td id="49"></td></tr>
+		<tr><td id="50"></td><td id="51"></td><td id="52"></td><td id="53"></td><td id="54"></td><td id="55"></td><td id="56"></td><td id="57"></td><td id="58"></td><td id="59"></td></tr>
+		<tr><td id="60"></td><td id="61"></td><td id="62"></td><td id="63"></td><td id="64"></td><td id="65"></td><td id="66"></td><td id="67"></td><td id="68"></td><td id="69"></td></tr>
+		<tr><td id="70"></td><td id="71"></td><td id="72"></td><td id="73"></td><td id="74"></td><td id="75"></td><td id="76"></td><td id="77"></td><td id="78"></td><td id="79"></td></tr>
+		<tr><td id="80"></td><td id="81"></td><td id="82"></td><td id="83"></td><td id="84"></td><td id="85"></td><td id="86"></td><td id="87"></td><td id="88"></td><td id="89"></td></tr>
+		<tr><td id="90"></td><td id="91"></td><td id="92"></td><td id="93"></td><td id="94"></td><td id="95"></td><td id="96"></td><td id="97"></td><td id="98"></td><td id="99"></td></tr>
+	</table>
+	<div class="setumei">
+		说明:<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;点击表格进行攻击，用尽可能少的次数，找到隐藏在其中的三架飞机<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;飞机形状如下 ※飞机方向不固定 飞机不会重叠<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;■<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;■■■■■<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;■<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;■<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;■■■<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;击中头部为击毁，表格将变为红色<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;击中机体为击中，表格将变为黄色<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;攻击位置没有飞机为击空，表格将变为白色<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;击毁全部三架飞机游戏结束<br>
+	</div>
+	<div class="scorediv">攻击次数：<span id="score">0</span></div>
+</body>
+</html>
