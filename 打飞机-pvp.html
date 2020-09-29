@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>打飞机</title>
+	<style type="text/css">
+		body {
+			background-color: black;
+			color: white
+		}
+		.map {
+			border: solid 1px;
+			width: 300px;
+			height: 300px;
+			position: absolute;
+			top: 20px;
+			left: 20px;
+		}
+		tr:nth-child(even), tr:nth-child(odd) {
+		  	background: white;
+		}
+		tr {
+			height: 28px;
+		}
+		td {
+		  	width: 28px;
+		}
+		.setumei {
+			position: absolute;
+			top: 80px;
+			left: 330px;
+			width: 600px;
+			height: 250px;
+			user-select: none;
+		}
+		.buttons {
+			position: absolute;
+			top: 20px;
+			left: 330px;
+			width: 600px;
+			height: 50px;
+			user-select: none;
+		}
+		.scorediv {
+			position: absolute;
+			top: 330px;
+			left: 20px;
+			user-select: none;
+		}
+		.plant1 {
+			position: absolute;
+			top: 350px;
+			left: 25px;
+			width: 148px;
+			height: 148px;
+			cursor: move;
+			transform: rotate(0);
+		}
+		.plant2 {
+			position: absolute;
+			top: 350px;
+			left: 175px;
+			width: 148px;
+			height: 148px;
+			cursor: move;
+			transform: rotate(0);
+		}
+		.plant3 {
+			position: absolute;
+			top: 350px;
+			left: 330px;
+			width: 148px;
+			height: 148px;
+			cursor: move;
+			transform: rotate(0);
+		}
+	</style>
+	<script type="text/javascript">
+		var plant1 = [];
+		var plant2 = [];
+		var plant3 = [];
+		var times = 0;
+		window.onload = function(){
+			var table = document.getElementById('plantmap');
+			if (table != null) {
+			    for (var i = 0; i < table.rows.length; i++) {
+			        for (var j = 0; j < table.rows[i].cells.length; j++)
+			        table.rows[i].cells[j].onclick = function () {
+			            checkPlant(this);
+			        };
+			    }
+			}
+			var drag1 = document.getElementById('plant1');
+		    var drag2 = document.getElementById('plant2');
+		    var drag3 = document.getElementById('plant3');
+			drag(drag1);
+			drag(drag2);
+			drag(drag3);
+		}
+		function drag(plant) {
+	        var drag = plant;
+	        var plantpoint = [-1, -1, 0, 0];
+
+	        drag.onmousedown = function (e) {
+	        	var diffX = e.clientX - drag.offsetLeft;
+	        	var diffY = e.clientY - drag.offsetTop;
+	        	var left = 0;
+	        	var top = 0;
+
+	        	document.onmousemove = function (e) {
+	          	    left = e.clientX - diffX;
+	          		top = e.clientY - diffY;
+
+	          		if (left < 0) {
+	            		left = 0;
+	          		} else if (left > window.innerWidth - drag.offsetWidth) {
+	            		left = window.innerWidth - drag.offsetWidth;
+	          		}
+	          		if (top < 0) {
+	            		top = 0;
+	          		} else if (top > window.innerHeight - drag.offsetHeight) {
+	            		top = window.innerHeight - drag.offsetHeight;
+	          		}
+
+	          		drag.style.left = left + 'px';
+	          		drag.style.top = top + 'px';
+	        	}
+	        	document.onmouseup = function (e) {
+	          		this.onmousemove = null;
+	          		this.onmouseup = null;
+	          		plantpoint = positionCorrection(left, top);
+	          		positionCorrection_set(drag, plantpoint);
+	        	}
+	      	}
+		}
+		function positionCorrection(pleft, ptop) {
+			var plantpoint = [-1, -1];
+			if (pleft < 20 || pleft > 320 || ptop < 20 || ptop > 320) {
+				//map area 外
+				return plantpoint;
+			}
+			pleft = pleft - 20;
+			ptop = ptop - 20;
+			var table = document.getElementById('plantmap');
+			if (table != null) {
+				loop:
+			    for (var i = 0; i < table.rows.length; i++) {
+			        for (var j = 0; j < table.rows[i].cells.length; j++) {
+			        	var tleft = table.rows[i].cells[j].offsetLeft;
+			        	var ttop = table.rows[i].cells[j].offsetTop;
+			        	if ((pleft - tleft <= 14 && pleft - tleft >= 0) || (tleft - pleft <= 14 && tleft - pleft >= 0)) {
+							plantpoint[0] = i;
+			        		if ((ptop - ttop <= 14 && ptop - ttop >= 0) || (ttop - ptop <= 14 && ttop - ptop >= 0)) {
+								plantpoint[1] = j;
+								plantpoint[2] = tleft + 20;
+								plantpoint[3] = ttop + 20;
+								break loop;
+			        		}
+			        	}
+			        }
+			    }
+			}
+			return plantpoint;
+		}
+		function positionCorrection_set(plant, plantpoint) {
+			if (plantpoint[0] < 0 || plantpoint[1] < 0) {
+				return;
+			}
+			plant.style.left = plantpoint[2] + 'px';
+			plant.style.top = plantpoint[3] + 'px';
+
+			var transform = plant.style.transform == '' ? '0' : plant.style.transform;
+			transform = parseInt(transform.replace('rotate(', '').replace('deg)', ''));
+			var point = [];
+			switch(transform % 360) {
+				case 0:// ↑
+					point = [];
+					point.push((plantpoint[0]) + '' + (plantpoint[1] + 2));
+					point.push((plantpoint[0] + 1) + '' + (plantpoint[1] + 2));
+					point.push((plantpoint[0] + 2) + '' + (plantpoint[1] + 2));
+					point.push((plantpoint[0] + 3) + '' + (plantpoint[1] + 2));
+					point.push((plantpoint[0] + 4) + '' + (plantpoint[1] + 2));
+					point.push((plantpoint[0] + 1) + '' + (plantpoint[1]));
+					point.push((plantpoint[0] + 1) + '' + (plantpoint[1] + 1));
+					point.push((plantpoint[0] + 1) + '' + (plantpoint[1] + 3));
+					point.push((plantpoint[0] + 1) + '' + (plantpoint[1] + 4));
+					point.push((plantpoint[0] + 4) + '' + (plantpoint[1] + 1));
+					point.push((plantpoint[0] + 4) + '' + (plantpoint[1] + 3));
+					break;
+				case 90:// →
+					point = [];
+					point.push((plantpoint[0] + 2) + '' + (plantpoint[1] + 4));
+					point.push((plantpoint[0] + 2) + '' + (plantpoint[1] + 3));
+					point.push((plantpoint[0] + 2) + '' + (plantpoint[1] + 2));
+					point.push((plantpoint[0] + 2) + '' + (plantpoint[1] + 1));
+					point.push((plantpoint[0] + 2) + '' + (plantpoint[1] + 0));
+					point.push((plantpoint[0] + 0) + '' + (plantpoint[1] + 3));
+					point.push((plantpoint[0] + 1) + '' + (plantpoint[1] + 3));
+					point.push((plantpoint[0] + 3) + '' + (plantpoint[1] + 3));
+					point.push((plantpoint[0] + 4) + '' + (plantpoint[1] + 3));
+					point.push((plantpoint[0] + 1) + '' + (plantpoint[1] + 0));
+					point.push((plantpoint[0] + 3) + '' + (plantpoint[1] + 0));
+					break;
+				case 180:// ↓
+					point = [];
+					point.push((plantpoint[0] + 4) + '' + (plantpoint[1] + 2));
+					point.push((plantpoint[0] + 3) + '' + (plantpoint[1] + 2));
+					point.push((plantpoint[0] + 2) + '' + (plantpoint[1] + 2));
+					point.push((plantpoint[0] + 1) + '' + (plantpoint[1] + 2));
+					point.push((plantpoint[0] + 0) + '' + (plantpoint[1] + 2));
+					point.push((plantpoint[0] + 3) + '' + (plantpoint[1] + 0));
+					point.push((plantpoint[0] + 3) + '' + (plantpoint[1] + 1));
+					point.push((plantpoint[0] + 3) + '' + (plantpoint[1] + 3));
+					point.push((plantpoint[0] + 3) + '' + (plantpoint[1] + 4));
+					point.push((plantpoint[0] + 0) + '' + (plantpoint[1] + 1));
+					point.push((plantpoint[0] + 0) + '' + (plantpoint[1] + 3));
+					break;
+				case 270:
+					point = [];// ←
+					point.push((plantpoint[0] + 2) + '' + (plantpoint[1] + 0));
+					point.push((plantpoint[0] + 2) + '' + (plantpoint[1] + 1));
+					point.push((plantpoint[0] + 2) + '' + (plantpoint[1] + 2));
+					point.push((plantpoint[0] + 2) + '' + (plantpoint[1] + 3));
+					point.push((plantpoint[0] + 2) + '' + (plantpoint[1] + 4));
+					point.push((plantpoint[0] + 0) + '' + (plantpoint[1] + 1));
+					point.push((plantpoint[0] + 1) + '' + (plantpoint[1] + 1));
+					point.push((plantpoint[0] + 3) + '' + (plantpoint[1] + 1));
+					point.push((plantpoint[0] + 4) + '' + (plantpoint[1] + 1));
+					point.push((plantpoint[0] + 1) + '' + (plantpoint[1] + 4));
+					point.push((plantpoint[0] + 3) + '' + (plantpoint[1] + 4));
+					break;
+				default:
+					break;
+			}
+			if (plant.id == 'plant1') {
+				plant1 = point;
+			} else if (plant.id == 'plant2') {
+				plant2 = point;
+			} else if (plant.id == 'plant3') {
+				plant3 = point;
+			}
+		}
+		function rotate(pid) {
+			var plant = document.getElementById(pid);
+			var transform = plant.style.transform == '' ? '0' : plant.style.transform;
+			transform = parseInt(transform.replace('rotate(', '').replace('deg)', ''));
+			plant.style.transform = 'rotate(' + (transform + 90) + 'deg)';
+		}
+		function start() {
+			var table = document.getElementById('plantmap');
+			if (table != null) {
+			    for (var i = 0; i < table.rows.length; i++) {
+			        for (var j = 0; j < table.rows[i].cells.length; j++)
+			        table.rows[i].cells[j].style.backgroundColor = 'gray';
+			    }
+			}
+			document.getElementById('plant1').style.display = 'none';
+			document.getElementById('plant2').style.display = 'none';
+			document.getElementById('plant3').style.display = 'none';
+		}
+		var downplantcount = 0;
+		function checkPlant(cell){
+			if (cell.style.backgroundColor != 'gray') {
+				return;
+			}
+
+			times++;
+			var score = document.getElementById('score');
+			score.innerHTML = times;
+
+			var point = cell.id;
+			if (plant1.includes(point) || plant2.includes(point) || plant3.includes(point)) {
+				// bingo
+				if (plant1[0] == point || plant2[0] == point || plant3[0] == point) {
+					// head
+					cell.style.backgroundColor = 'red';
+					downplantcount++;
+					if (downplantcount == 3) {
+						gameover();
+					}
+				} else {
+					// body
+					cell.style.backgroundColor = 'yellow';
+				}
+			} else {
+				// sky
+				cell.style.backgroundColor = 'white';
+			}
+		}
+		function gameover(){
+			var table = document.getElementById('plantmap');
+			if (table != null) {
+			    for (var i = 0; i < table.rows.length; i++) {
+			        for (var j = 0; j < table.rows[i].cells.length; j++){
+			        	if (table.rows[i].cells[j].style.backgroundColor == 'gray') {
+			        		var point = table.rows[i].cells[j].id;
+							if (plant1.includes(point) || plant2.includes(point) || plant3.includes(point)) {
+								table.rows[i].cells[j].style.backgroundColor = 'yellow';
+							} else {
+								table.rows[i].cells[j].style.backgroundColor = 'white';
+							}
+			        	}
+			        }
+			    }
+			}
+		}
+	</script>
+</head>
+<body>
+	<table id="plantmap" class="map">
+		<tr><td id="00"></td><td id="01"></td><td id="02"></td><td id="03"></td><td id="04"></td><td id="05"></td><td id="06"></td><td id="07"></td><td id="08"></td><td id="09"></td></tr>
+		<tr><td id="10"></td><td id="11"></td><td id="12"></td><td id="13"></td><td id="14"></td><td id="15"></td><td id="16"></td><td id="17"></td><td id="18"></td><td id="19"></td></tr>
+		<tr><td id="20"></td><td id="21"></td><td id="22"></td><td id="23"></td><td id="24"></td><td id="25"></td><td id="26"></td><td id="27"></td><td id="28"></td><td id="29"></td></tr>
+		<tr><td id="30"></td><td id="31"></td><td id="32"></td><td id="33"></td><td id="34"></td><td id="35"></td><td id="36"></td><td id="37"></td><td id="38"></td><td id="39"></td></tr>
+		<tr><td id="40"></td><td id="41"></td><td id="42"></td><td id="43"></td><td id="44"></td><td id="45"></td><td id="46"></td><td id="47"></td><td id="48"></td><td id="49"></td></tr>
+		<tr><td id="50"></td><td id="51"></td><td id="52"></td><td id="53"></td><td id="54"></td><td id="55"></td><td id="56"></td><td id="57"></td><td id="58"></td><td id="59"></td></tr>
+		<tr><td id="60"></td><td id="61"></td><td id="62"></td><td id="63"></td><td id="64"></td><td id="65"></td><td id="66"></td><td id="67"></td><td id="68"></td><td id="69"></td></tr>
+		<tr><td id="70"></td><td id="71"></td><td id="72"></td><td id="73"></td><td id="74"></td><td id="75"></td><td id="76"></td><td id="77"></td><td id="78"></td><td id="79"></td></tr>
+		<tr><td id="80"></td><td id="81"></td><td id="82"></td><td id="83"></td><td id="84"></td><td id="85"></td><td id="86"></td><td id="87"></td><td id="88"></td><td id="89"></td></tr>
+		<tr><td id="90"></td><td id="91"></td><td id="92"></td><td id="93"></td><td id="94"></td><td id="95"></td><td id="96"></td><td id="97"></td><td id="98"></td><td id="99"></td></tr>
+	</table>
+	<div class="buttons">
+		<button onclick="start()">start</button>
+	</div>
+	<div class="setumei">
+		说明:<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;击中头部为击毁，表格将变为红色<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;击中机体为击中，表格将变为黄色<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;攻击位置没有飞机为击空，表格将变为白色<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;击毁全部三架飞机游戏结束<br>
+	</div>
+	<div class="scorediv">攻击次数：<span id="score">0</span></div>
+	<div id="plant1" class="plant1" ondblclick="rotate('plant1')">
+		<svg width="148" height="148">
+			<rect x="60" y="2" width="28" height="28" style="stroke-width: 1; stroke: black; fill: red;"></rect>
+			<rect x="60" y="32" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="60" y="62" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="60" y="92" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="60" y="122" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="2" y="32" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="31" y="32" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="89" y="32" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="118" y="32" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="31" y="122" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="89" y="122" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+		</svg>
+	</div>
+	<div id="plant2" class="plant2" ondblclick="rotate('plant2')">
+		<svg width="148" height="148">
+			<rect x="60" y="2" width="28" height="28" style="stroke-width: 1; stroke: black; fill: red;"></rect>
+			<rect x="60" y="32" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="60" y="62" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="60" y="92" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="60" y="122" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="2" y="32" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="31" y="32" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="89" y="32" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="118" y="32" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="31" y="122" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="89" y="122" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+		</svg>
+	</div>
+	<div id="plant3" class="plant3" ondblclick="rotate('plant3')">
+		<svg width="148" height="148">
+			<rect x="60" y="2" width="28" height="28" style="stroke-width: 1; stroke: black; fill: red;"></rect>
+			<rect x="60" y="32" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="60" y="62" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="60" y="92" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="60" y="122" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="2" y="32" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="31" y="32" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="89" y="32" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="118" y="32" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="31" y="122" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+			<rect x="89" y="122" width="28" height="28" style="stroke-width: 1; stroke: black; fill: yellow;"></rect>
+		</svg>
+	</div>
+</body>
+</html>
